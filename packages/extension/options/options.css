@@ -1,0 +1,170 @@
+:root {
+  color-scheme: light dark;
+  --moss: #1a3a2f;
+  --moss-soft: #2f5a48;
+  --paper: #f3efe6;
+  --ink: #1a2b24;
+  --clay: #b55a3c;
+  --surface: rgba(255, 255, 255, 0.75);
+  --line: rgba(26, 43, 36, 0.2);
+  --glow: rgba(47, 90, 72, 0.16);
+  --btn-text: #f7f3ea;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --moss: #8fbfa8;
+    --moss-soft: #a7cbbc;
+    --paper: #121a17;
+    --ink: #e7efe9;
+    --clay: #e08a6e;
+    --surface: rgba(24, 36, 31, 0.92);
+    --line: rgba(167, 203, 188, 0.28);
+    --glow: rgba(143, 191, 168, 0.12);
+    --btn-text: #0f1613;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Source Sans 3", sans-serif;
+  background:
+    radial-gradient(800px 400px at 0% 0%, var(--glow), transparent 60%),
+    var(--paper);
+  color: var(--ink);
+}
+
+main {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+h1 {
+  margin: 0;
+  color: var(--moss);
+}
+
+.lead {
+  color: var(--moss-soft);
+}
+
+.lead code {
+  font-size: 0.85em;
+}
+
+form {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.25rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+input, select, button, textarea {
+  font: inherit;
+}
+
+input, select, textarea {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid var(--moss);
+  background: var(--moss);
+  color: var(--btn-text);
+  padding: 0.55rem 0.85rem;
+  border-radius: 4px;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--moss);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hint {
+  margin: -0.4rem 0 0;
+  font-size: 0.85rem;
+  color: var(--moss-soft);
+  font-weight: 400;
+}
+
+.message {
+  margin-top: 1rem;
+}
+
+.message.is-error {
+  color: var(--clay);
+}
+
+.message.is-ok {
+  color: var(--moss);
+}
+
+.account-panel,
+.extra {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.extra {
+  margin-top: 2rem;
+}
+
+.account-panel h2,
+.extra h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--moss);
+}
+
+.turnstile-wrap iframe {
+  width: 100%;
+  min-height: 90px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+}
+
+textarea {
+  width: 100%;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+#isbnResult {
+  white-space: pre-wrap;
+  background: var(--surface);
+  padding: 0.65rem;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+}

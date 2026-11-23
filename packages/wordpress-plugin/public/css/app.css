@@ -1,0 +1,300 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Source+Sans+3:wght@400;600&display=swap");
+
+:root {
+  color-scheme: light dark;
+  --ink: #1a2b24;
+  --paper: #f3efe6;
+  --moss: #1a3a2f;
+  --moss-soft: #2f5a48;
+  --clay: #b55a3c;
+  --mist: #d9e2dc;
+  --line: rgba(26, 43, 36, 0.14);
+  --shadow: 0 18px 40px rgba(26, 58, 47, 0.12);
+  --atm-1: rgba(47, 90, 72, 0.18);
+  --atm-2: rgba(181, 90, 60, 0.12);
+  --atm-3: #efe8da;
+  --atm-4: #e7efe9;
+  --panel: rgba(255, 255, 255, 0.45);
+  --input-bg: rgba(255, 255, 255, 0.7);
+  --btn-text: #f7f3ea;
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  --font-body: "Source Sans 3", "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e7efe9;
+    --paper: #101612;
+    --moss: #8fbfa8;
+    --moss-soft: #a7cbbc;
+    --clay: #e08a6e;
+    --mist: #1c2923;
+    --line: rgba(167, 203, 188, 0.22);
+    --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    --atm-1: rgba(143, 191, 168, 0.12);
+    --atm-2: rgba(224, 138, 110, 0.1);
+    --atm-3: #121a17;
+    --atm-4: #0d1411;
+    --panel: rgba(18, 28, 24, 0.72);
+    --input-bg: rgba(18, 28, 24, 0.9);
+    --btn-text: #0f1613;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.45;
+}
+
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, var(--atm-1), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, var(--atm-2), transparent 55%),
+    linear-gradient(180deg, var(--atm-3) 0%, var(--paper) 45%, var(--atm-4) 100%);
+}
+
+.site-header {
+  padding: 1.25rem 1.25rem 0.5rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--moss);
+}
+
+.brand .by {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--moss-soft);
+  letter-spacing: 0.04em;
+  margin-top: 0.15rem;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0.5rem 1.25rem 4rem;
+}
+
+.loading, .error {
+  padding: 2rem 0;
+  color: var(--moss-soft);
+}
+
+.error {
+  color: var(--clay);
+}
+
+.wishlist-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 1.85rem);
+  margin: 0.75rem 0 0.25rem;
+}
+
+.meta {
+  color: var(--moss-soft);
+  font-size: 0.95rem;
+  margin: 0 0 1.5rem;
+}
+
+.item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+  align-items: start;
+}
+
+.item-main {
+  display: flex;
+  gap: 0.85rem;
+  align-items: start;
+  min-width: 0;
+}
+
+.item-cover {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 2px;
+  background: var(--mist);
+}
+
+.item-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.88rem;
+  color: var(--moss-soft);
+}
+
+.meta a {
+  color: var(--moss);
+}
+
+.item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.item-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.item-title a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.item-title a:hover,
+.item-title a:focus-visible {
+  border-bottom-color: var(--moss);
+}
+
+.item-status {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--moss-soft);
+}
+
+.item-status.taken {
+  color: var(--clay);
+}
+
+.item-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: stretch;
+}
+
+button, .btn {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--moss);
+  background: var(--moss);
+  color: var(--btn-text);
+  padding: 0.45rem 0.85rem;
+  border-radius: 4px;
+}
+
+button.secondary, .btn.secondary {
+  background: transparent;
+  color: var(--moss);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.chat-panel {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.chat-panel h2 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin: 0 0 0.75rem;
+}
+
+.chat-log {
+  min-height: 8rem;
+  max-height: 16rem;
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+.chat-line {
+  margin: 0 0 0.55rem;
+  font-size: 0.95rem;
+}
+
+.chat-line .who {
+  font-weight: 600;
+  color: var(--moss);
+}
+
+.chat-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+}
+
+.chat-form input,
+.claim-form input {
+  font: inherit;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--line);
+  background: var(--input-bg);
+  color: var(--ink);
+  border-radius: 4px;
+}
+
+.chat-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.rtc-badge {
+  font-size: 0.8rem;
+  color: var(--moss-soft);
+  align-self: center;
+}
+
+.claim-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 560px) {
+  .item {
+    grid-template-columns: 1fr;
+  }
+
+  .item-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}

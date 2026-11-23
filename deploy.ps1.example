@@ -1,0 +1,126 @@
+#Requires -Version 5.1
+<#
+.SYNOPSIS
+  Build puis upload FTP du plugin Desiderata (et optionnellement l'API autonome)
+  vers le même WordPress O2switch que dai-wp-asso.
+
+.USAGE
+  Copy to deploy.ps1 (gitignored), fill FtpPass, then:
+    .\deploy.ps1
+    .\deploy.ps1 -SkipBuild
+    .\deploy.ps1 -Standalone
+#>
+param(
+	[switch]$SkipBuild,
+	[switch]$Standalone
+)
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$Root = $PSScriptRoot
+
+# === FTP (même site que dai-wp-asso) ===
+$FtpHost    = 'ftp.dibu8100.odns.fr'
+$FtpUser    = 'atelier@dibu8100.odns.fr'
+$FtpPass    = 'REMPLIR_ICI'
+$PluginRemote = 'wp-content/plugins/desiderata'
+$ApiRemote    = 'desiderata-api'
+# ===========
+
+if ([string]::IsNullOrWhiteSpace($FtpPass) -or $FtpPass -eq 'REMPLIR_ICI') {
+	throw 'Remplir FtpPass dans deploy.ps1'
+}
+
+if (-not $SkipBuild) {
+	& (Join-Path $Root 'build.ps1')
+}
+
+$script:FtpDirsCreated = @{}
+
+function Get-FtpCredential {
+	return New-Object System.Net.NetworkCredential($FtpUser, $FtpPass)
+}
+
+function Ensure-FtpDirectory([string]$path) {
+	$path = ($path -replace '\\', '/').Trim('/')
+	if ([string]::IsNullOrWhiteSpace($path)) { return }
+	if ($script:FtpDirsCreated.ContainsKey($path)) { return }
+
+	$parts = $path.Split(@('/'), [System.StringSplitOptions]::RemoveEmptyEntries)
+	$accum = ''
+	foreach ($part in $parts) {
+		$accum = if ($accum) { "$accum/$part" } else { $part }
+		if ($script:FtpDirsCreated.ContainsKey($accum)) { continue }
+		try {
+			$uri = "ftp://$FtpHost/$accum"
+			$ftp = [System.Net.FtpWebRequest]::Create($uri)
+			$ftp.Credentials = Get-FtpCredential
+			$ftp.Method = [System.Net.WebRequestMethods+Ftp]::MakeDirectory
+			$ftp.UsePassive = $true
+			$ftp.KeepAlive = $false
+			$r = $ftp.GetResponse()
+			$r.Close()
+		} catch {
+			# 550 usually means already exists
+		}
+		$script:FtpDirsCreated[$accum] = $true
+	}
+}
+
+function Upload-FtpFile([string]$localPath, [string]$remotePath) {
+	$remotePath = ($remotePath -replace '\\', '/').TrimStart('/')
+	if ($remotePath.Contains('/')) {
+		$parent = $remotePath.Substring(0, $remotePath.LastIndexOf('/'))
+		Ensure-FtpDirectory $parent
+	}
+	$uri = "ftp://$FtpHost/$remotePath"
+	$ftp = [System.Net.FtpWebRequest]::Create($uri)
+	$ftp.Credentials = Get-FtpCredential
+	$ftp.Method = [System.Net.WebRequestMethods+Ftp]::UploadFile
+	$ftp.UsePassive = $true
+	$ftp.KeepAlive = $false
+	$ftp.UseBinary = $true
+	$bytes = [IO.File]::ReadAllBytes($localPath)
+	$ftp.ContentLength = $bytes.Length
+	$stream = $ftp.GetRequestStream()
+	try { $stream.Write($bytes, 0, $bytes.Length) } finally { $stream.Close() }
+	$resp = $ftp.GetResponse()
+	$resp.Close()
+	Write-Host "  OK $remotePath" -ForegroundColor Green
+}
+
+function Publish-ZipFolder([string]$ZipPath, [string]$InnerFolder, [string]$RemotePath) {
+	if (-not (Test-Path $ZipPath)) {
+		throw "Zip manquant: $ZipPath"
+	}
+	$TempExtract = Join-Path $env:TEMP ("desiderata-deploy-" + [guid]::NewGuid().ToString('N'))
+	New-Item -ItemType Directory -Path $TempExtract -Force | Out-Null
+	try {
+		Expand-Archive -Path $ZipPath -DestinationPath $TempExtract -Force
+		$UploadRoot = Join-Path $TempExtract $InnerFolder
+		if (-not (Test-Path $UploadRoot)) {
+			throw "Dossier $InnerFolder introuvable dans $ZipPath"
+		}
+		Write-Host "==> Upload FTP vers ftp://$FtpHost/$RemotePath"
+		Ensure-FtpDirectory $RemotePath
+		$files = Get-ChildItem $UploadRoot -Recurse -File -Force | Where-Object {
+			$_.Name -ne 'config.php' -and $_.Extension -notin @('.zip', '.ps1', '.map')
+		} | Sort-Object FullName
+		foreach ($file in $files) {
+			$rel = $file.FullName.Substring($UploadRoot.Length).TrimStart('\', '/')
+			$remote = ($RemotePath.TrimEnd('/') + '/' + ($rel -replace '\\', '/'))
+			Upload-FtpFile $file.FullName $remote
+		}
+	}
+	finally {
+		Remove-Item $TempExtract -Recurse -Force -ErrorAction SilentlyContinue
+	}
+}
+
+Publish-ZipFolder (Join-Path $Root 'dist\desiderata.zip') 'desiderata' $PluginRemote
+
+if ($Standalone) {
+	Publish-ZipFolder (Join-Path $Root 'dist\desiderata-api.zip') 'desiderata-api' $ApiRemote
+	Write-Host 'Note: créer config.php sur le serveur (depuis config.example.php).' -ForegroundColor Yellow
+}
+
+Write-Host '==> Deploy FTP termine' -ForegroundColor Green

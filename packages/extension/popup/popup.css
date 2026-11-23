@@ -1,0 +1,85 @@
+:root {
+  color-scheme: light dark;
+  --moss: #1a3a2f;
+  --moss-soft: #2f5a48;
+  --paper: #f3efe6;
+  --ink: #1a2b24;
+  --clay: #b55a3c;
+  --btn-text: #f7f3ea;
+  --font: "Segoe UI", "Source Sans 3", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --moss: #8fbfa8;
+    --moss-soft: #a7cbbc;
+    --paper: #121a17;
+    --ink: #e7efe9;
+    --clay: #e08a6e;
+    --btn-text: #0f1613;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  width: 320px;
+  padding: 14px;
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--paper);
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--moss);
+}
+
+.tag {
+  margin: 0.15rem 0 0.85rem;
+  font-size: 0.8rem;
+  color: var(--moss-soft);
+}
+
+#sync-status {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.claims {
+  font-size: 0.85rem;
+  color: var(--clay);
+  margin: 0 0 0.75rem;
+}
+
+.actions {
+  display: grid;
+  gap: 0.45rem;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--moss);
+  background: var(--moss);
+  color: var(--btn-text);
+  padding: 0.5rem 0.7rem;
+  border-radius: 4px;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--moss);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.message {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desiderata</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <h1>Desiderata</h1>
+    <p class="tag">par L'atelier</p>
+  </header>
+
+  <section id="status-block">
+    <p id="sync-status">…</p>
+    <p id="claims" class="claims" hidden></p>
+  </section>
+
+  <section class="actions">
+    <button type="button" id="btn-sync">Synchroniser</button>
+    <button type="button" id="btn-copy" class="secondary" disabled>Copier le lien</button>
+    <button type="button" id="btn-open" class="secondary" disabled>Ouvrir</button>
+    <button type="button" id="btn-options" class="secondary">Options</button>
+  </section>
+
+  <p id="message" class="message" hidden></p>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

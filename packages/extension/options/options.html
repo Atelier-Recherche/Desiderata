@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desiderata — Options</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main>
+    <h1>Desiderata</h1>
+    <p class="lead">Connectez l’extension à l’API Desiderata (WordPress <code>/wp-json/desiderata/v1</code> ou standalone <code>/desiderata-api/v1</code>) et synchronisez un dossier de favoris.</p>
+
+    <form id="form">
+      <label>
+        URL du site / API
+        <input type="url" id="siteUrl" placeholder="https://exemple.fr" required />
+      </label>
+      <div class="row">
+        <button type="button" id="btn-authorize" class="secondary">Autoriser ce site</button>
+      </div>
+
+      <section id="account-panel" class="account-panel" hidden>
+        <h2>Compte</h2>
+        <p id="registration-hint" class="hint"></p>
+        <label>
+          E-mail
+          <input type="email" id="accountEmail" autocomplete="username" />
+        </label>
+        <label>
+          Mot de passe
+          <input type="password" id="accountPassword" autocomplete="new-password" />
+        </label>
+        <label>
+          Pseudo (inscription)
+          <input type="text" id="accountDisplay" maxlength="120" />
+        </label>
+        <div id="turnstile-wrap" class="turnstile-wrap" hidden>
+          <p class="hint">Anti-bot : validez le défi ci-dessous (ou une fenêtre popup) avant de créer le compte.</p>
+          <iframe id="turnstile-frame" title="Cloudflare Turnstile" hidden></iframe>
+          <input type="hidden" id="turnstileToken" value="" />
+          <p id="turnstile-status" class="hint"></p>
+        </div>
+        <div class="row">
+          <button type="button" id="btn-register" class="secondary" hidden>Créer un compte</button>
+          <button type="button" id="btn-login" class="secondary">Se connecter</button>
+        </div>
+      </section>
+
+      <label>
+        Jeton API
+        <input type="password" id="token" autocomplete="off" required />
+      </label>
+      <p class="hint">Rempli automatiquement après connexion / inscription depuis l’extension.</p>
+
+      <label>
+        Liste
+        <select id="wishlistId" required>
+          <option value="">— charger après connexion —</option>
+        </select>
+      </label>
+      <div class="row">
+        <button type="button" id="btn-load-lists" class="secondary">Charger mes listes</button>
+        <button type="button" id="btn-create-list" class="secondary">Créer une liste</button>
+      </div>
+
+      <label>
+        Dossier de favoris
+        <select id="folderId" required>
+          <option value="">— chargement —</option>
+        </select>
+      </label>
+
+      <div class="row">
+        <button type="submit">Enregistrer et synchroniser</button>
+        <button type="button" id="btn-sync-now" class="secondary">Synchroniser maintenant</button>
+      </div>
+    </form>
+
+    <section class="extra">
+      <h2>Import Zotero</h2>
+      <p class="hint">Collez un export JSON Zotero ou CSL-JSON vers la liste sélectionnée.</p>
+      <textarea id="zoteroJson" rows="6" placeholder='[ { "key": "...", "data": { "title": "..." } } ]'></textarea>
+      <div class="row">
+        <button type="button" id="btn-zotero" class="secondary">Importer dans la liste</button>
+        <button type="button" id="btn-export-zotero" class="secondary">Ouvrir export CSL</button>
+      </div>
+    </section>
+
+    <section class="extra">
+      <h2>Lookup ISBN (Open Library)</h2>
+      <div class="row">
+        <input type="text" id="isbnInput" placeholder="978…" />
+        <button type="button" id="btn-isbn" class="secondary">Chercher</button>
+      </div>
+      <pre id="isbnResult" class="hint" hidden></pre>
+    </section>
+
+    <p id="message" class="message" hidden></p>
+  </main>
+  <script type="module" src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Build artifacts
+dist/
+packages/extension/dist-chrome/
+packages/extension/dist-firefox/
+packages/extension/dist-pack/
+*.zip
+*.xpi
+
+# Local deploy secrets (copy from deploy.ps1.example)
+/deploy.ps1
+
+# Standalone runtime config
+packages/standalone/config.php
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.local.ps1
